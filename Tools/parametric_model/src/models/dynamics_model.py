@@ -6,6 +6,7 @@ __license__ = "BSD 3"
 export to a sitl gazebo model by providing a unified interface for all models. """
 
 from progress.bar import Bar
+from .rotor_models import RotorModel, BiDirectionalRotorModel, TiltingRotorModel, ChangingAxisRotorModel
 import pandas as pd
 import math
 import time
@@ -17,6 +18,7 @@ from .rotor_models import RotorModel, BiDirectionalRotorModel, TiltingRotorModel
 from src.tools.ulog_tools import load_ulog, pandas_from_topic
 from src.tools.dataframe_tools import compute_flight_time, resample_dataframe_list
 from src.tools.quat_utils import quaternion_to_rotation_matrix
+from visual_dataframe_selector.data_selector import select_visual_data
 
 
 class DynamicsModel():
