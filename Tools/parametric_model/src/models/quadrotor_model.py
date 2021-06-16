@@ -83,12 +83,30 @@ class QuadRotorModel(DynamicsModel):
 
     def plot_model_predicitons(self):
 
+	X2 = sm.add_constant(self.X)
+        est = sm.OLS(self.y, X2)
+        est2 = est.fit()
+        print(self.coef_name_list)
+        print(est2.summary())
+
+        
+        new_coef_name_list = ["c_D_rotor", "c_T1_rotor",
+                              "c_T0_rotor", "c_D_f_x", "c_D_f_y", "c_D_f_z"]
+        X_frame = pd.DataFrame(self.X, columns=new_coef_name_list)
+        covMatrix = X_frame.corr()
+        print(covMatrix.shape)
+        sn.heatmap(covMatrix, annot=True, fmt='g')
+        X_frame = pd.DataFrame(self.X, columns=self.coef_name_list)
+
         y_pred = self.reg.predict(self.X)
+        print("RMSE: ", math.sqrt(mean_squared_error(y_pred, self.y)))
 
         model_plots.plot_accel_predeictions(
             self.y, y_pred, self.data_df["timestamp"])
-        model_plots.plot_airspeed_and_AoA(
-            self.data_df[["V_air_body_x", "V_air_body_y", "V_air_body_z", "AoA"]], self.data_df["timestamp"])
+        model_plots.plot_actuator_inputs(
+            self.data_df[["u0", "u1", "u2", "u3"]].to_numpy(), self.data_df["timestamp"])
+        model_plots.plot_airspeed(
+            self.data_df[["V_air_body_x", "V_air_body_y", "V_air_body_z"]], self.data_df["timestamp"])
         plt.show()
         return
 
