@@ -27,6 +27,7 @@ def plot_lift_curve(c_l_dict, plot_range_deg=[-100, 100]):
 
 
 def plot_lift_curve2(c_l_dict1, c_l_dict2, plot_range_deg=[-100, 100]):
+    fig, ax = plt.subplots()
     aoa_deg = np.linspace(
         plot_range_deg[0], plot_range_deg[1], num=(plot_range_deg[1] - plot_range_deg[0] + 1))
     aoa_rad = aoa_deg * math.pi/180
@@ -44,11 +45,41 @@ def plot_lift_curve2(c_l_dict1, c_l_dict2, plot_range_deg=[-100, 100]):
             c_l_dict2["c_l_lin"] * aoa_rad[i] + \
             stall_region * math.sin(2*aoa_rad[i]) * c_l_dict2["c_l_stall"]
 
-    plt.plot(aoa_deg, c_l_vec1, label="prediction")
-    plt.plot(aoa_deg, c_l_vec2, label="expectation")
-    plt.title("Lift coefficient over angle of attack [deg]")
-    plt.xlabel('Angle of Attack [deg]')
-    plt.ylabel('Lift Coefficient')
+    ax.plot(aoa_deg, c_l_vec1, label="prediction")
+    ax.plot(aoa_deg, c_l_vec2, label="expectation")
+    ax.set_title("Lift coefficient over angle of attack [deg]")
+    ax.set_xlabel('Angle of Attack [deg]')
+    ax.set_ylabel('Lift Coefficient')
+    plt.legend()
+
+
+def plot_drag_curve2(c_d_dict1, c_d_dict2, plot_range_deg=[-100, 100]):
+    fig, ax = plt.subplots()
+    aoa_deg = np.linspace(
+        plot_range_deg[0], plot_range_deg[1], num=(plot_range_deg[1] - plot_range_deg[0] + 1))
+    aoa_rad = aoa_deg * math.pi/180
+    c_d_vec1 = np.zeros(aoa_deg.shape[0])
+    c_d_vec2 = np.zeros(aoa_deg.shape[0])
+    for i in range(aoa_deg.shape[0]):
+        stall_region = cropped_sym_sigmoid(
+            aoa_rad[i], x_offset=(15*math.pi/180), scale_fac=30)
+        # 1 in linear/quadratic region, 0 in post-stall region
+        flow_attached_region = 1 - stall_region
+        c_d_vec1[i] = flow_attached_region * c_d_dict1["c_d_offset"] + flow_attached_region * \
+            c_d_dict1["c_d_quad"] * aoa_rad[i]**2 + \
+            stall_region * ((1 - math.sin(aoa_rad[i])**2) * c_d_dict1["c_d_stall_min"] + math.sin(
+                aoa_rad[i])**2 * c_d_dict1["c_d_stall_max"])
+        c_d_vec2[i] = flow_attached_region * c_d_dict2["c_d_offset"] + flow_attached_region * \
+            c_d_dict2["c_d_quad"] * aoa_rad[i]**2 + \
+            stall_region * ((1 - math.sin(aoa_rad[i])**2) * c_d_dict2["c_d_stall_min"] + math.sin(
+                aoa_rad[i])**2 * c_d_dict2["c_d_stall_max"])
+
+    ax.plot(aoa_deg, c_d_vec1, label="prediction")
+    ax.plot(aoa_deg, c_d_vec2, label="expectation")
+    ax.set_title("Drag coefficient over angle of attack [deg]")
+    ax.set_xlabel('Angle of Attack [deg]')
+    ax.set_ylabel('Drag Coefficient')
+    plt.legend()
 
 
 def plot_aoa_hist(aoa_vec):

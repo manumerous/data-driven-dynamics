@@ -35,3 +35,39 @@ class TiltingRotorModel(ChangingAxisRotorModel):
             curr_axis = (
                 R_active_tilt @ self.rotor_axis).flatten()
             self.rotor_axis_mat[i, :] = curr_axis/np.linalg.norm(curr_axis)
+
+    def compute_actuator_force_features(self, index, rotor_axis=None):
+        """compute thrust model using a 2nd degree model of the normalized actuator outputs
+
+        Inputs:
+        actuator_input: actuator input between 0 and 1
+        v_airspeed: airspeed velocity in body frame, numpoy array of shape (3,1)
+
+        For the model explanation have a look at the PDF.
+        """
+
+        actuator_input = self.actuator_input_vec[index]
+        v_air_parallel_abs = self.v_air_parallel_abs[index]
+        v_airspeed_perpendicular_to_rotor_axis = \
+            self.v_airspeed_perpendicular_to_rotor_axis[index, :].reshape(
+                (3, 1))
+        ang_vel = (-3058 * actuator_input**2 + 9945 *
+                   actuator_input + 226)*math.pi/30
+        # ang_vel = actuator_input
+
+        if rotor_axis is None:
+            rotor_axis = self.rotor_axis
+
+        # Thrust force computation
+        X_thrust = rotor_axis @ np.array(
+            [[(v_air_parallel_abs*ang_vel/self.prop_diameter), ang_vel**2]]) * self.air_density * self.prop_diameter**4
+        # Drag force computation
+        if (np.linalg.norm(v_airspeed_perpendicular_to_rotor_axis) >= 0.05):
+            X_drag = - v_airspeed_perpendicular_to_rotor_axis @ np.array(
+                [[ang_vel]])
+        else:
+            X_drag = np.zeros((3, 1))
+
+        X_forces = np.hstack((X_drag, X_thrust))
+
+        return X_forces

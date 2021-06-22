@@ -24,7 +24,7 @@ def plot_accel_predeictions(stacked_acc_vec, stacked_acc_vec_pred, timestamp_arr
     acc_mat = stacked_acc_vec.reshape((-1, 3))
     acc_mat_pred = stacked_acc_vec_pred.reshape((-1, 3))
 
-    fig, (ax1, ax2, ax3) = plt.subplots(3)
+    fig, (ax1, ax2, ax3) = plt.subplots(3, sharex=True)
     fig.suptitle('Predictions of linear accelerations')
     ax1.plot(timestamp_array, acc_mat[:, 0], label='measurement')
     ax1.plot(timestamp_array, acc_mat_pred[:, 0], label='prediction')
@@ -40,6 +40,41 @@ def plot_accel_predeictions(stacked_acc_vec, stacked_acc_vec_pred, timestamp_arr
     ax1.set_ylabel('x [m/s^2]')
     ax2.set_ylabel('y [m/s^2]')
     ax3.set_ylabel('z [m/s^2]')
+    ax3.set_xlabel('time [s]')
+    plt.legend()
+    return
+
+
+def plot_component_forces(force_data_dict, timestamp_array):
+    """
+    Input:
+    stacked_acc_vec: numpy array of shape (3*n,1) containing stacked accelerations [a_x_1, a_y_1, a_z_1, a_x_2, ...]^T in body frame
+    stacked_acc_vec_pred: numpy array of shape (3*n,1) containing stacked predicted accelerations [a_x_1, a_y_1, a_z_1, a_x_2, ...]^T in body frame
+    timestamp_array: numpy array with n entries of corresponding timestamps.
+    """
+
+    timestamp_array = np.array(timestamp_array)/1000000
+
+    # acc_mat = stacked_acc_vec.reshape((-1, 3))
+    # acc_mat_pred = stacked_acc_vec_pred.reshape((-1, 3))
+
+    fig, (ax1, ax2, ax3) = plt.subplots(3, sharex=True)
+    fig.suptitle('Predictions of Force Components')
+    for force_name in force_data_dict.keys():
+        force_data = force_data_dict[force_name]
+        force_data = force_data.reshape((-1, 3))
+
+        ax1.plot(timestamp_array, force_data[:, 0], label=force_name)
+        ax2.plot(timestamp_array, force_data[:, 1], label=force_name)
+        ax3.plot(timestamp_array, force_data[:, 2], label=force_name)
+
+    # ax1.set_title('acceleration in x direction of body frame [m/s^2]')
+    # ax2.set_title('acceleration in y direction of body frame [m/s^2]')
+    # ax3.set_title('acceleration in z direction of body frame [m/s^2]')
+
+    ax1.set_ylabel('x [N]')
+    ax2.set_ylabel('y [N]')
+    ax3.set_ylabel('z [N]')
     ax3.set_xlabel('time [s]')
     plt.legend()
     return

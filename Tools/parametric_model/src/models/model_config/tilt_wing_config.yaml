@@ -9,47 +9,47 @@ model_file:
 model_config:
   optimzation_parameters:
     initial_coefficients:
-      c_d_fuselage_x: 5.960860986549141e-05
-      c_d_fuselage_y: 5.9589891142367027e-05
-      c_d_fuselage_z: 5.96086098654914e-05
-      c_d_wing_xz_cs: 5.960860986549141e-05
+      c_d_fuselage_x: 3.751271547882848e-05
+      c_d_fuselage_y: 6.610696135189607e-05
+      c_d_fuselage_z: 5.320180202837322e-05
+      c_d_wing_xz_cs: 5.955717075213566e-05
       c_d_wing_xz_lin: 0.0
-      c_d_wing_xz_offset: 5.960860986549141e-05
-      c_d_wing_xz_quad: 5.960860986549141e-05
-      c_d_wing_xz_stall_90_deg: 0.22726478888225798
-      c_d_wing_xz_stall_min: 5.96086098654914e-05
-      c_l_wing_xz_cs: 9.999940391390135
-      c_l_wing_xz_lin: 0.10496666979914424
-      c_l_wing_xz_offset: 0.19516500398326345
-      c_l_wing_xz_stall: 0.4288447276965395
-      elevator_c_l: 5.9608609865491396e-05
-      tail_rot_drag_lin: 0.3751725517192227
-      tail_rot_thrust_lin: -4.9665677688685435e-05
-      tail_rot_thrust_quad: 2646.8027301824836
-      wing_rot_drag_lin: 0.6356520284533661
-      wing_rot_thrust_lin: -23.993477183884284
-      wing_rot_thrust_quad: 1519.2372221651042
+      c_d_wing_xz_offset: 0.48263406736660136
+      c_d_wing_xz_quad: 1.6178194821124863
+      c_d_wing_xz_stall_90_deg: 2.775203742560603
+      c_d_wing_xz_stall_min: 0.5460970646284986
+      c_l_wing_xz_cs: 0.0
+      c_l_wing_xz_lin: 8.852081730870465
+      c_l_wing_xz_offset: 0.0
+      c_l_wing_xz_stall: 0.6
+      elevator_c_l: 5.9608609566412214e-05
+      tail_rot_drag_lin: 6.619923823819639e-05
+      tail_rot_thrust_lin: -6.610696135189609e-05
+      tail_rot_thrust_quad: 0.0029361412912433755
+      wing_rot_drag_lin: 0.0008619674219434446
+      wing_rot_thrust_lin: -0.015720638065245165
+      wing_rot_thrust_quad: 0.0016924493145938507
     coefficient_bounds:
-      c_d_fuselage_x: !!python/tuple [0, 10]
-      c_d_fuselage_y: !!python/tuple [0, 10]
-      c_d_fuselage_z: !!python/tuple [0, 10]
+      c_d_fuselage_x: !!python/tuple [0, 0.1]
+      c_d_fuselage_y: !!python/tuple [0, 1]
+      c_d_fuselage_z: !!python/tuple [0, 0.5]
       c_d_wing_xz_cs: !!python/tuple [0, 10]
       c_d_wing_xz_lin: !!python/tuple [0, 0]
       c_d_wing_xz_offset: !!python/tuple [0, 10]
       c_d_wing_xz_quad: !!python/tuple [0, 10]
       c_d_wing_xz_stall_90_deg: !!python/tuple [0, 10]
       c_d_wing_xz_stall_min: !!python/tuple [0, 10]
-      c_l_wing_xz_cs: !!python/tuple [0, 10]
+      c_l_wing_xz_cs: !!python/tuple [0, 0]
       c_l_wing_xz_lin: !!python/tuple [0, 100]
-      c_l_wing_xz_offset: !!python/tuple [-10, 10]
-      c_l_wing_xz_stall: !!python/tuple [0, 10]
+      c_l_wing_xz_offset: !!python/tuple [0, 0]
+      c_l_wing_xz_stall: !!python/tuple [0, 1]
       elevator_c_l: !!python/tuple [0, 10]
-      tail_rot_drag_lin: !!python/tuple [0, 1000]
-      tail_rot_thrust_lin: !!python/tuple [-1000, 0]
-      tail_rot_thrust_quad: !!python/tuple [0, 10000]
-      wing_rot_drag_lin: !!python/tuple [0, 1000]
-      wing_rot_thrust_lin: !!python/tuple [-1000, 0]
-      wing_rot_thrust_quad: !!python/tuple [0, 10000]
+      tail_rot_drag_lin: !!python/tuple [0, 1]
+      tail_rot_thrust_lin: !!python/tuple [-1, 0]
+      tail_rot_thrust_quad: !!python/tuple [0, 0.003]
+      wing_rot_drag_lin: !!python/tuple [0, 1]
+      wing_rot_thrust_lin: !!python/tuple [-1, 0]
+      wing_rot_thrust_quad: !!python/tuple [0.001, 1]
   mass: 6.1
   actuators:
     rotors:
@@ -184,61 +184,61 @@ model_config:
         dataframe_name: "u_tilt"
 
   aerodynamics:
-    stall_angle_deg: 15
+    stall_angle_deg: 17
     sig_scale_factor: 50
     main_wing_sections:
       - wing_right_right:
         rotor: "u0"
         control_surface_dataframe_name: "u5"
-        wing_surface: 0.425
+        wing_surface: 0.0425
         cp_position:
           - 0
           - 0
           - 0
-        stall_angle_deg: 15
+        stall_angle_deg: 16
         sig_scale_factor: 50
         description: "wing segment right, right"
 
       - wing_right_left:
         rotor: "u1"
         control_surface_dataframe_name: "u6"
-        wing_surface: 0.425
+        wing_surface: 0.0425
         cp_position:
           - 0
           - 0
           - 0
-        stall_angle_deg: 15
+        stall_angle_deg: 16
         sig_scale_factor: 50
         description: "wing segment right, left"
 
       - wing_left_right:
         rotor: "u2"
         control_surface_dataframe_name: "u7"
-        wing_surface: 0.425
+        wing_surface: 0.0425
         cp_position:
           - 0
           - 0
           - 0
-        stall_angle_deg: 15
+        stall_angle_deg: 16
         sig_scale_factor: 50
         description: "wing segment left, right"
 
       - wing_left_left:
         rotor: "u3"
         control_surface_dataframe_name: "u8"
-        wing_surface: 0.425
+        wing_surface: 0.0425
         cp_position:
           - 0
           - 0
           - 0
-        stall_angle_deg: 15
+        stall_angle_deg: 16
         sig_scale_factor: 50
         description: "wing segment left, left"
 
 dynamics_model_config:
   estimate_forces: True
   estimate_moments: False
-  resample_freq: 5
+  resample_freq: 0.5
   data:
     required_ulog_topics:
       actuator_controls_0:

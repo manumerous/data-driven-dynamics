@@ -31,26 +31,30 @@ def plot_thrust_prediction_and_underlying_data(rotor_coef_dict, rotor, force_pro
     plt.legend()
 
 
-def plot_rotor_trust_3d(rotor_coef_dict, rotor):
+def plot_rotor_trust_3d(rotor_coef_dict, rotor, tail=False):
     fig, ax = plt.subplots(1)
     u_vec = np.arange(0, 1, .01)
-    v_air_par_vec = np.arange(0, 10, .1)
-    u_vec, v_air_par_vec = np.meshgrid(u_vec, v_air_par_vec)
+    if tail:
+        ang_vel_rpm = (-1895*u_vec**2 + 10882*u_vec + 213)
+    else:
+        ang_vel_rpm = (-3058 * u_vec**2 + 9945*u_vec + 226)
+    v_air_par_vec = np.arange(0, 20, .1)
+    u_vec, v_air_par_vec = np.meshgrid(ang_vel_rpm, v_air_par_vec)
+    ang_vel_vec = ang_vel_rpm*math.pi/30
     f_thrust_mat = rotor.air_density * rotor.prop_diameter**4 * \
-        (u_vec**2 * rotor_coef_dict["rot_thrust_quad"] + u_vec *
+        (ang_vel_vec**2 * rotor_coef_dict["rot_thrust_quad"] + ang_vel_vec *
          v_air_par_vec * rotor_coef_dict["rot_thrust_lin"] / rotor.prop_diameter)
+
     # for i in range(u_vec.shape[0]):
     #     f_trust_zero_airspeed = rotor.air_density * rotor.prop_diameter**4 * \
     #         u_vec[i]**2 * rotor_coef_dict["rot_thrust_quad"]
     #     f_thrust_mat[i, :] = np.ones(
     #         (1, v_air_par_vec.shape[0])) * f_trust_zero_airspeed - v_air_par_vec * rotor.air_density * rotor.prop_diameter**3 * \
     #         u_vec[i]**2 * rotor_coef_dict["rot_thrust_lin"]
-
-    print(f_thrust_mat.shape)
     ax = plt.axes(projection='3d')
-    ax.plot_surface(u_vec, v_air_par_vec, f_thrust_mat, rstride=1, cstride=1,
+    ax.plot_surface(ang_vel_rpm, v_air_par_vec, f_thrust_mat, rstride=1, cstride=1,
                     cmap='viridis', edgecolor='none')
     ax.set_title("Rotor Thrust Force")
-    ax.set_xlabel("Normalized Rotor Input")
-    ax.set_ylabel("Airspeed [m/s]")
+    ax.set_xlabel("Rotor RPM [1/min] ")
+    ax.set_ylabel("Inflow Airspeed [m/s]")
     ax.set_zlabel("Rotor Thrust [N]")
