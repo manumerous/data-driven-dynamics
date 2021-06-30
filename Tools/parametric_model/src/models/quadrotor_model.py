@@ -38,6 +38,10 @@ from .model_plots import model_plots
 from .aerodynamic_models import FuselageDragModel
 from .model_config import ModelConfig
 import matplotlib.pyplot as plt
+import statsmodels.api as sm
+from scipy import stats
+import seaborn as sn
+from sklearn.metrics import mean_squared_error
 
 
 class QuadRotorModel(DynamicsModel):
@@ -82,14 +86,12 @@ class QuadRotorModel(DynamicsModel):
         return X, y
 
     def plot_model_predicitons(self):
-
-	X2 = sm.add_constant(self.X)
+        X2 = sm.add_constant(self.X)
         est = sm.OLS(self.y, X2)
         est2 = est.fit()
         print(self.coef_name_list)
         print(est2.summary())
 
-        
         new_coef_name_list = ["c_D_rotor", "c_T1_rotor",
                               "c_T0_rotor", "c_D_f_x", "c_D_f_y", "c_D_f_z"]
         X_frame = pd.DataFrame(self.X, columns=new_coef_name_list)
